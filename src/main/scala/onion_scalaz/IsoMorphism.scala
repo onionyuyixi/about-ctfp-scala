@@ -1,6 +1,7 @@
 
 package onion_scalaz
 
+
 trait Iso[Arr[_, _], A, B] {
 
   self =>
@@ -41,6 +42,23 @@ trait BifunctorIso[Arr[_[_, _], _[_, _]], F[_, _], G[_, _]] {
 
 }
 
+trait IsoFunctorTemplate[F[_], G[_]] extends IsoFunctor[F, G] {
+
+  override final val to: NaturalTrans[F, G] = new(F ~> G) {
+    override def apply[A](fa: F[A]): G[A] = to_(fa)
+  }
+
+  override final val from: NaturalTrans[G, F] = new(F <~ G) {
+
+    override def apply[A](ga: G[A]): F[A] = from_(ga)
+  }
+
+  def to_[A](fa: F[A]): G[A]
+
+  def from_[A](ga: G[A]): F[A]
+
+
+}
 
 object Isos {
 
@@ -87,7 +105,6 @@ object Isos {
 
     override def from: Function[A, A] = a => a
   }
-
 
 
 }

@@ -54,5 +54,12 @@ object Endo extends EndoInstances {
     override def from: (A => A) => Endo[A] = (y: A => A) => endo(y)
   }
 
+  private val IsoFunctorEndo: IsoFunctorTemplate[Endo, λ[x => x => x]] = new IsoFunctorTemplate[Endo, λ[x => x => x]] {
+
+    override def to_[A](fa: Endo[A]): A => A = fa.run
+
+    override def from_[A](ga: A => A): Endo[A] = Endo(ga)
+  }
+
 }
 

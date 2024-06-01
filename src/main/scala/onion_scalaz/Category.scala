@@ -46,7 +46,7 @@ object Category {
   @inline def apply[F[_, _]](implicit F: Category[F]): Category[F] = F
 
 
-  def fromIso[F[_, _], G[_, _]](D: F <~~> G)(implicit E: Category[G]): Category[F] = {
+  def fromIso[F[_, _], G[_, _]](D: F <~> G)(implicit E: Category[G]): Category[F] = {
     val from = D.from
     val to = D.to
     new Category[F] {

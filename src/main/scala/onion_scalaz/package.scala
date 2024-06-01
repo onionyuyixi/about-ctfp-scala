@@ -1,3 +1,4 @@
+
 package object onion_scalaz {
 
   type Id[X] = X
@@ -12,9 +13,14 @@ package object onion_scalaz {
 
   type <=>[A, B] = IsoSet[A, B]
 
-  type IsoBifunctor[F[_, _], G[_, _]] = BifunctorIso[BiNaturalTransformation, F, G]
+  type IsoFunctor[F[_], G[_]] = FunctorIso[NaturalTrans, F, G]
 
-  type <~~>[F[_, _], G[_, _]] = IsoBifunctor[F, G]
+  type IsoBifunctor[F[_, _], G[_, _]] = BifunctorIso[BiNaturalTrans, F, G]
 
+  type <~>[F[_, _], G[_, _]] = IsoBifunctor[F, G]
+
+  type ~>[F[_], G[_]] = NaturalTrans[F, G]
+
+  type <~[F[_], G[_]] = NaturalTrans[G, F]
 
 }
