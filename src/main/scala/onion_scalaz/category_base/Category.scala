@@ -1,4 +1,5 @@
 
+
 package onion_scalaz
 
 import scalaz.{Equal, IsomorphismCompose}
@@ -7,6 +8,26 @@ import scalaz.{Equal, IsomorphismCompose}
 trait Category[=>:[_, _]] extends Compose[=>:] {
 
   def id[A]: A =>: A
+
+  def endoId[A]: Endo[A] = {
+
+    // 好像不得行哇
+    val value: IsoBifunctor[Function, =>:] = new IsoBifunctor[Function, =>:] {
+
+      override def to: BiNaturalTrans[Function, =>:] = new BiNaturalTrans[Function, =>:] {
+        override def apply[A, B](fa: Function[A, B]): A =>: B = ???
+      }
+
+      override def from: BiNaturalTrans[=>:, Function] = new BiNaturalTrans[=>:, Function] {
+        override def apply[A, B](fa: A =>: B): Function[A, B] = ???
+      }
+    }
+
+    val value1: Category[Function] = Category.fromIso[Function, =>:](value)(this)
+
+    Endo(value1.id[A])
+
+  }
 
 
   def monoid[A]: Monoid[A =>: A] = new Monoid[A =>: A] with ComposeSemigroup[A] {

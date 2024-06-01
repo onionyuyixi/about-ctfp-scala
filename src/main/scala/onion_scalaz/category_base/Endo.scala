@@ -2,7 +2,7 @@ package onion_scalaz
 
 
 // 类似于Id[X]
-final case class Endo[A](run: A => A) {
+final case class Endo[A](run: A=>A) {
 
 
   def apply(a: A): A = run(a)
@@ -48,17 +48,25 @@ object Endo extends EndoInstances {
 
   final def idEndo[A]: Endo[A] = endo[A](a => a)
 
-  def IsoEndo[A]: Endo[A] <=> (A => A) = new IsoSet[Endo[A], A => A] {
+  def isoEndo[A]: Endo[A] <=> (A => A) = new IsoSet[Endo[A], A => A] {
     override def to: Endo[A] => A => A = (x: Endo[A]) => x.run
 
     override def from: (A => A) => Endo[A] = (y: A => A) => endo(y)
   }
 
-  private val IsoFunctorEndo: IsoFunctorTemplate[Endo, λ[x => x => x]] = new IsoFunctorTemplate[Endo, λ[x => x => x]] {
+  val isoFunctorEndo: IsoFunctorTemplate[Endo, λ[x => x => x]] = new IsoFunctorTemplate[Endo, λ[x => x => x]] {
 
     override def to_[A](fa: Endo[A]): A => A = fa.run
 
     override def from_[A](ga: A => A): Endo[A] = Endo(ga)
+  }
+
+  def category[A] = new Category[Function1[Endo[A],Endo[A]]]{
+
+
+    override def id[A]: A => A = ???
+
+    override def compose[A, B, C](f: B => C, g: A => B): A => C = ???
   }
 
 }
