@@ -28,7 +28,7 @@ trait Leibniz[-L, +H >: L, A >: L <: H, B >: L <: H] {
 
   // X=>A 相当于 Funtion1[X,A]
   def onF[X](fa: X => A): X => B = {
-    val func: (X => A) => X => B = subst[[Y] =>> X => Y]
+    val func: (X => A) => X => B = subst[X => *]
     func(fa)
   }
 
@@ -52,13 +52,13 @@ object Leibniz {
 
   def trans[L, H >: L, A >: L <: H, B >: L <: H, C >: L <: H](f: Leibniz[L, H, A, B], g: Leibniz[L, H, B, C]): Leibniz[L, H, A, C] = {
 
-    g.subst[[X >: L <: H] =>> Leibniz[L, H, A, X]](f)
-    val func: Leibniz[L, H, A, B] => Leibniz[L, H, A, C] = g.subst[[X >: L <: H] =>> Leibniz[L, H, A, X]]
+    g.subst[λ[`x>: L <: H` => Leibniz[L, H, A, x]]](f)
+    val func: Leibniz[L, H, A, B] => Leibniz[L, H, A, C] = g.subst[λ[`x>: L <: H` => Leibniz[L, H, A, x]]]
     func(f)
   }
 
   def symm[L, H >: L, A >: L <: H, B >: L <: H](leibniz: Leibniz[L, H, A, B]): Leibniz[L, H, B, A] = {
-    val function: Leibniz[L, H, A, A] => Leibniz[L, H, B, A] = leibniz.subst[[X >: L <: H] =>> Leibniz[L, H, X, A]]
+    val function: Leibniz[L, H, A, A] => Leibniz[L, H, B, A] = leibniz.subst[λ[`x>: L <: H` => Leibniz[L, H, x, A]]]
     function(reflex)
   }
 
@@ -70,8 +70,8 @@ object Leibniz {
   ](a: Leibniz[LA, HA, A, A2]): Leibniz[LT, HT, T[A], T[A2]] = {
 
     val func: Leibniz[LT, HT, T[A], T[A]] => Leibniz[LT, HT, T[A], T[A2]] =
-      a.subst[[M >: [X] =>> LA <: [X] =>> HA] =>> Leibniz[LT, HT, T[A], T[M]]]
-      
+      a.subst[λ[`x>: L <: H` => Leibniz[LT, HT, T[A], T[x]]]]
+
     func(reflex)
 
   }
@@ -89,12 +89,12 @@ object Leibniz {
    ): Leibniz[LT, HT, T[A, B], T[A2, B2]] = {
 
     val func1: Leibniz[LT, HT, T[A, B], T[A, B]] => Leibniz[LT, HT, T[A, B], T[A2, B]] =
-      a.subst[[X >: LA <: HA] =>> Leibniz[LT, HT, T[A, B], T[X, B]]]
+      a.subst[λ[`x>: L <: H` => Leibniz[LT, HT, T[A, B], T[x, B]]]]
 
     val v1: Leibniz[LT, HT, T[A, B], T[A2, B]] = func1(reflex)
 
     val func2: Leibniz[LT, HT, T[A, B], T[A2, B]] => Leibniz[LT, HT, T[A, B], T[A2, B2]] =
-      b.subst[[X >: LB <: HB] =>> Leibniz[LT, HT, T[A, B], T[A2, X]]]
+      b.subst[λ[`x>: L <: H` => Leibniz[LT, HT, T[A, B], T[A2, x]]]]
     func2(v1)
 
   }
@@ -114,15 +114,16 @@ object Leibniz {
    ): Leibniz[LT, HT, T[A, B, C], T[A2, B2, C2]] = {
 
     val func1: Leibniz[LT, HT, T[A, B, C], T[A, B, C]] => Leibniz[LT, HT, T[A, B, C], T[A2, B, C]] =
-      a.subst[[X >: LA <: HA] =>> Leibniz[LT, HT, T[A, B, C], T[X, B, C]]]
+      a.subst[λ[`x>: L <: H` => Leibniz[LT, HT, T[A, B, C], T[x, B, C]]]]
     val v1: Leibniz[LT, HT, T[A, B, C], T[A2, B, C]] = func1(reflex)
 
     val func2: Leibniz[LT, HT, T[A, B, C], T[A2, B, C]] => Leibniz[LT, HT, T[A, B, C], T[A2, B2, C]] =
-      b.subst[[X >: LB <: HB] =>> Leibniz[LT, HT, T[A, B, C], T[A2, X, C]]]
+      b.subst[λ[`x>: L <: H` => Leibniz[LT, HT, T[A, B, C], T[A2, x, C]]]]
+
     val v2: Leibniz[LT, HT, T[A, B, C], T[A2, B2, C]] = func2(v1)
 
     val func3: Leibniz[LT, HT, T[A, B, C], T[A2, B2, C]] => Leibniz[LT, HT, T[A, B, C], T[A2, B2, C2]] =
-      c.subst[[X >: LC <: HC] =>> Leibniz[LT, HT, T[A, B, C], T[A2, B2, X]]]
+      c.subst[λ[`x>: L <: H` => Leibniz[LT, HT, T[A, B, C], T[A2, B2, x]]]]
     func3(v2)
 
   }

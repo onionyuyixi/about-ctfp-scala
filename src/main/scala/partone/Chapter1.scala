@@ -1,6 +1,5 @@
 package partone
 
-import java.util.concurrent.locks.LockSupport
 
 trait Id[A] {
   def id(a: A): A = a
@@ -46,7 +45,6 @@ object Memo extends Memo[String, Int] {
         value
       case None =>
         println("first time to simulate 1 second delay")
-        LockSupport.parkNanos(1000*1000*1000)
         val value = f(a)
         data += (a -> value)
         value

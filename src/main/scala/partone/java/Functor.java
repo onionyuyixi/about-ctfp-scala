@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
-public record JavaFunctor<A>(Function0<A> a) {
+public record Functor<A>(Function0<A> a) {
 
     private record Container<A>(Function0<A> a) {
 
@@ -48,7 +48,7 @@ public record JavaFunctor<A>(Function0<A> a) {
 
                 long l1 = System.currentTimeMillis();
                 for (int i = 0; i < i1; i++) {
-                    JavaFunctor.unit(i)
+                    Functor.unit(i)
                             .map((String::valueOf))
                             .map0(strF0 -> strF0.map(f0 -> () -> f0.eval() + strs.parallelStream().collect(Collectors.joining())))
                             .a.eval();
@@ -68,7 +68,7 @@ public record JavaFunctor<A>(Function0<A> a) {
 
                 long l = System.currentTimeMillis();
                 for (int i = 0; i < i1; i++) {
-                    JavaFunctor.unit(i)
+                    Functor.unit(i)
                             .map(String::valueOf)
                             .map(a -> a + strs.parallelStream().collect(Collectors.joining()))
                             .a.eval();

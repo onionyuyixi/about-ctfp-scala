@@ -15,12 +15,12 @@ sealed abstract class Liskov[-A, +B] {
 
   def andThen[C](g: Liskov[B, C]): A <~< C = {
     val thisInstance: Liskov[A, B] = this
-    val func: Liskov[B, C] => Liskov[A, C] = thisInstance.contravariant[[X] =>> Liskov[X, C]]
+    val func: Liskov[B, C] => Liskov[A, C] = thisInstance.contravariant[* <~< C]
     func(g)
   }
 
   def compose[C](g: Liskov[C, A]): Liskov[C, B] = {
-    val func: Liskov[C, A] => Liskov[C, B] = this.covariant[[X] =>> Liskov[C, X]]
+    val func: Liskov[C, A] => Liskov[C, B] = this.covariant[Liskov[C, *]]
     func(g)
   }
 
@@ -31,7 +31,7 @@ object Liskov {
 
 
   implicit def witness[A, B](lt: A <~< B): A => B = {
-    val func: (B => B) => A => B = lt.contravariant[[X] =>> X => B]
+    val func: (B => B) => A => B = lt.contravariant[* => B]
     func(identity)
   }
 
@@ -51,43 +51,38 @@ object Liskov {
 
   def trans[A, B, C](f: Liskov[A, B], g: Liskov[B, C]): Liskov[A, C] = {
 
-    val func: B <~< C => A <~< C = f.contravariant[[X] =>> <~<[X, C]]
+    val func: B <~< C => A <~< C = f.contravariant[Liskov[*, C]]
     func(g)
 
-    val fun1: A <~< B => A <~< C = g.covariant[[M >: [X] =>> X] =>> <~<[A, M]]
+    val fun1: A <~< B => A <~< C = g.covariant[Liskov[A, +*]]
     fun1.apply(f)
 
   }
 
 
-  def co[T[+_], A, A2](a: A <~< A2): (T[A] <~< T[A2]) = {
-
-    val func1: T[A2] <~< T[A2] => T[A] <~< T[A2] = a.contravariant[[M >: [X] =>> X] =>> T[M] <~< T[A2]]
+  def co[T[+_], A, A2](a: A <~< A2): T[A] <~< T[A2] = {
+    val func1: T[A2] <~< T[A2] => T[A] <~< T[A2] = a.contravariant[λ[`+x` => T[x] <~< T[A2]]]
     func1(refl)
-
-    val func2: T[A] <~< T[A] => T[A] <~< T[A2] = a.covariant[[M >: [X] =>> X] =>> T[A] <~< T[M]]
-    func2(refl)
-
-
   }
 
   def co2[T[+_, _], Z, A, B](a: A <~< Z): T[A, B] <~< T[Z, B] = {
-    val func: T[Z, B] <~< T[Z, B] => T[A, B] <~< T[Z, B] = a.contravariant[[M >: [X] =>> X] =>> <~<[T[M, B], T[Z, B]]]
+    val func: T[Z, B] <~< T[Z, B] => T[A, B] <~< T[Z, B] = a.contravariant[λ[`+x` => T[x, B] <~< T[Z, B]]]
     func(refl)
   }
 
   def co2_2[T[_, +_], Z, A, B](a: B <~< Z): T[A, B] <~< T[A, Z] = {
 
-    val func: T[A, Z] <~< T[A, Z] => T[A, B] <~< T[A, Z] = a.contravariant[[M >: [X] =>> X] =>> T[A, M] <~< T[A, Z]]
+    val func: T[A, Z] <~< T[A, Z] => T[A, B] <~< T[A, Z] = a.contravariant[λ[`+x` => T[A, x] <~< T[A, Z]]]
 
     func(refl)
   }
 
-  def co3[T[+_, _, _], Z, A, B, C](a: A <~< Z): T[A, B, C] <~< T[Z, B, C] =
-    a.contravariant[[M >: [X] =>> X] =>> T[M, B, C] <~< T[Z, B, C]](refl)
+  def co3[T[+_, _, _], Z, A, B, C](a: A <~< Z): T[A, B, C] <~< T[Z, B, C] = {
+    a.contravariant[λ[`+x` => T[x, B, C] <~< T[Z, B, C]]](refl)
+  }
 
   def co4[T[+_, _, _, _], Z, A, B, C, D](a: A <~< Z): T[A, B, C, D] <~< T[Z, B, C, D] =
-    a.contravariant[[M >: [X] =>> X] =>> T[M, B, C, D] <~< T[Z, B, C, D]](refl)
+    a.contravariant[λ[`+x` => T[x, B, C, D] <~< T[Z, B, C, D]]](refl)
 
   /** lift2(a,b) = co1_2(a) compose co2_2(b) */
   def lift2[T[+_, +_], A, A2, B, B2](a: A <~< A2, b: B <~< B2): T[A, B] <~< T[A2, B2] = {
@@ -125,34 +120,34 @@ object Liskov {
 
 
   def contra[T[-_], A, A2](a: A <~< A2): T[A2] <~< T[A] = {
-    val function: T[A2] <~< T[A2] => T[A2] <~< T[A] = a.contravariant[({type l[-x] = T[A2] <~< T[x]})#l]
+    val function: T[A2] <~< T[A2] => T[A2] <~< T[A] = a.contravariant[λ[`-x` => T[A2] <~< T[x]]]
     function(refl)
   }
 
   // binary
   def contra1_2[T[-_, _], Z, A, B](a: A <~< Z): (T[Z, B] <~< T[A, B]) = {
     val func: T[Z, B] <~< T[Z, B] => T[Z, B] <~< T[A, B] =
-      a.contravariant[[X] =>> T[Z, B] <~< T[X, B]]
+      a.contravariant[λ[`+x` => T[Z, B] <~< T[x, B]]]
     func(refl)
   }
 
   def contra2_2[T[_, -_], Z, A, B](a: B <~< Z): (T[A, Z] <~< T[A, B]) = {
-    val func: T[A, Z] <~< T[A, Z] => T[A, Z] <~< T[A, B] = a.contravariant[[X] =>> T[A, Z] <~< T[A, X]]
+    val func: T[A, Z] <~< T[A, Z] => T[A, Z] <~< T[A, B] = a.contravariant[λ[`+x` => T[A, Z] <~< T[A, x]]]
     func(refl)
   }
 
 
   def contra1_3[T[-_, _, _], Z, A, B, C](a: A <~< Z): (T[Z, B, C] <~< T[A, B, C]) =
-    a.contravariant[({type l[-x] = T[Z, B, C] <~< T[x, B, C]})#l](refl)
+    a.contravariant[λ[`-x` => T[Z, B, C] <~< T[x, B, C]]](refl)
 
   def contra2_3[T[_, -_, _], Z, A, B, C](a: B <~< Z): (T[A, Z, C] <~< T[A, B, C]) =
-    a.contravariant[({type l[-x] = T[A, Z, C] <~< T[A, x, C]})#l](refl)
+    a.contravariant[λ[`-x` => T[A, Z, C] <~< T[A, x, C]]](refl)
 
   def contra3_3[T[_, _, -_], Z, A, B, C](a: C <~< Z): (T[A, B, Z] <~< T[A, B, C]) =
-    a.contravariant[({type l[-x] = T[A, B, Z] <~< T[A, B, x]})#l](refl)
+    a.contravariant[λ[`-x` => T[A, B, Z] <~< T[A, B, x]]](refl)
 
   def contra1_4[T[-_, _, _, _], Z, A, B, C, D](a: A <~< Z): (T[Z, B, C, D] <~< T[A, B, C, D]) =
-    a.contravariant[({type l[-x] = T[Z, B, C, D] <~< T[x, B, C, D]})#l](refl)
+    a.contravariant[λ[`-x` => T[Z, B, C, D] <~< T[x, B, C, D]]](refl)
 
   def contra2_4[T[_, -_, _, _], Z, A, B, C, D](a: B <~< Z): (T[A, Z, C, D] <~< T[A, B, C, D]) =
     a.contravariant[({type l[-x] = T[A, Z, C, D] <~< T[A, x, C, D]})#l](refl)

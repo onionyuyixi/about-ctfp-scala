@@ -1,7 +1,5 @@
 package parttwo
 
-import partone.ReaderFunctor
-
 trait NaturalTrans[F[_], G[_]] {
 
   def apply[A](fa: F[A]): G[A]
@@ -37,7 +35,10 @@ object Test extends App {
       }
   }
 
-  implicit def readerFunctorRep[E]: RepresentableFunctor[Function[E, *], E] = new RepresentableFunctor[E => *, E] {
+
+
+  implicit def readerFunctorRep[E]: RepresentableFunctor[E => *, E] =
+    new RepresentableFunctor[E => *, E] {
 
     override def tabulate[A](f: E => A): E => A = f
 
@@ -48,7 +49,6 @@ object Test extends App {
 
 
 }
-
 
 
 

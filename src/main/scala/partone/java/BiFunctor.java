@@ -2,7 +2,7 @@ package partone.java;
 
 import java.util.function.Function;
 
-public record JavaBiFunctor<A, B>(A a, B b) {
+public record BiFunctor<A, B>(A a, B b) {
 
     private record BiContainer<A, B>(Function0<A> f0a, Function0<B> f0b) {
 
