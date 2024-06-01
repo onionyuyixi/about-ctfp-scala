@@ -24,7 +24,7 @@ trait Category[=>:[_, _]] extends Compose[=>:] {
     }
 
     def rightIdentity[A, B](ab: (A =>: B))(implicit E: Equal[A =>: B]): Boolean = {
-      val v: A =>: B = compose(id[A], ab)
+      val v: A =>: B = compose(id[B], ab)
       E.equal(ab, v)
     }
 
@@ -46,7 +46,7 @@ object Category {
   @inline def apply[F[_, _]](implicit F: Category[F]): Category[F] = F
 
 
-  def fromIso[F[_, _], G[_, _]](D: F <~> G)(implicit E: Category[G]): Category[F] = {
+  def fromIso[F[_, _], G[_, _]](D: F <~~> G)(implicit E: Category[G]): Category[F] = {
     val from = D.from
     val to = D.to
     new Category[F] {

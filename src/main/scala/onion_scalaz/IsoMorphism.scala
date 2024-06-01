@@ -42,6 +42,18 @@ trait BifunctorIso[Arr[_[_, _], _[_, _]], F[_, _], G[_, _]] {
 
 }
 
+
+object IsoSet {
+
+  def apply[A, B](ab: A => B, ba: B => A): A <=> B = new IsoSet[A, B] {
+    override def to: A => B = ab
+
+    override def from: B => A = ba
+  }
+
+
+}
+
 trait IsoFunctorTemplate[F[_], G[_]] extends IsoFunctor[F, G] {
 
   override final val to: NaturalTrans[F, G] = new(F ~> G) {

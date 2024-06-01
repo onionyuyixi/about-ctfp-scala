@@ -35,9 +35,9 @@ trait Compose[=>:[_, _]] {
 
     @inline def apply[F[_, _]](implicit F: Compose[F]): Compose[F] = F
 
-    def fromIso[F[_, _], G[_, _]](D: F <~> G)(implicit E: Compose[G]): Compose[F] = {
-      val from: BiNaturalTransformation[G, F] = D.from
-      val to: BiNaturalTransformation[F, G] = D.to
+    def fromIso[F[_, _], G[_, _]](D: F <~~> G)(implicit E: Compose[G]): Compose[F] = {
+      val from: BiNaturalTrans[G, F] = D.from
+      val to: BiNaturalTrans[F, G] = D.to
       new Compose[F] {
         override def compose[A, B, C](f: F[B, C], g: F[A, B]): F[A, C] = {
           val gac: G[A, C] = E.compose(to(f), to(g))
@@ -47,10 +47,10 @@ trait Compose[=>:[_, _]] {
     }
 
 
-    def fromIso1[F[_, _], G[_, _]](D: F <~> G)(implicit E: Compose[G]): Compose[F] = new IsomorphismCompose[F, G] {
+    def fromIso1[F[_, _], G[_, _]](D: F <~~> G)(implicit E: Compose[G]): Compose[F] = new IsomorphismCompose[F, G] {
       override implicit def G: Compose[G] = E
 
-      override def iso: F <~> G = D
+      override def iso: F <~~> G = D
     }
   }
 
@@ -59,7 +59,7 @@ trait Compose[=>:[_, _]] {
 
     implicit def G: Compose[G]
 
-    def iso: F <~> G
+    def iso: F <~~> G
 
     override def compose[A, B, C](f: F[B, C], g: F[A, B]): F[A, C] =
       iso.from(G.compose(iso.to(f), iso.to(g)))
