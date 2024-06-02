@@ -12,11 +12,13 @@ trait Apply[F[_]] extends Functor[F] {
   // 与Functor[F]中的map不同 map(fa:F[A])(f:A=>B):F[B] 这是lift effect 存在容器的切换
   def ap[A, B](fa: => F[A])(f: => F[A => B]): F[B]
 
+//  todo
+//  def traverse1[A, G[_], B](value: G[A])(f: A => F[B])(implicit G: Traverse1[G]): F[G[B]] =
+//    G.traverse1(value)(f)(this)
+//
+//  def sequence1[A, G[_]: Traverse1](as: G[F[A]]): F[G[A]] =
 
-  def traverse1[A, G[_], B](value: G[A])(f: A => F[B])(implicit G: Traverse1[G]): F[G[B]] =
-    G.traverse1(value)(f)(this)
 
-  def sequence1[A, G[_]: Traverse1](as: G[F[A]]): F[G[A]] =
 
 
 
