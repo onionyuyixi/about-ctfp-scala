@@ -1,5 +1,7 @@
 
-package onion_scalaz
+package onion_scalaz.subst
+
+import onion_scalaz.{===, Id}
 
 
 trait Leibniz[-L, +H >: L, A >: L <: H, B >: L <: H] {

@@ -1,5 +1,7 @@
 
-package onion_scalaz
+package onion_scalaz.morphism
+
+import onion_scalaz.{<=>, <~, IsoFunctor, IsoSet, ~>}
 
 
 trait Iso[Arr[_, _], A, B] {

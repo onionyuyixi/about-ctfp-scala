@@ -1,7 +1,10 @@
 
 
-package onion_scalaz
+package onion_scalaz.category_base
 
+import onion_scalaz.monoid.Monoid
+import onion_scalaz.morphism.BiNaturalTrans
+import onion_scalaz.{<~~>, IsoBifunctor}
 import scalaz.{Equal, IsomorphismCompose}
 
 //

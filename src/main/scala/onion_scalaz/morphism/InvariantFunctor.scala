@@ -1,7 +1,7 @@
 package onion_scalaz.morphism
 
-import onion_scalaz.{<=>, <~>, Bijection, IsoSet, NaturalTrans}
-import scalaz.Alpha.B
+import onion_scalaz._
+import scalaz.Equal
 
 // 不变的Functor xmap 有两个函数
 // Also known as an exponential functor.
@@ -20,6 +20,15 @@ trait InvariantFunctor[F[_]] {
       override def to: A => B = b._to
       override def from: B => A = b._from
     })
+  }
+
+  trait InvariantFunctorLaw {
+
+    def invariantIdentity[A](fa: F[A])(implicit FA: Equal[F[A]]): Boolean =
+      FA.equal(xmap[A, A](fa, x => x, x => x), fa)
+
+    def invariantComposite[A, B, C](fa: F[A], f1: A => B, g1: B => A, f2: B => C, g2: C => B)(implicit FC: Equal[F[C]]): Boolean =
+      FC.equal(xmap(xmap(fa, f1, g1), f2, g2), xmap(fa, f2 compose f1, g1 compose g2))
   }
 
 

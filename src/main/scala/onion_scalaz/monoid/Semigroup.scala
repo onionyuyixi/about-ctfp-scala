@@ -1,6 +1,8 @@
 
-package onion_scalaz
+package onion_scalaz.monoid
 
+import onion_scalaz.<=>
+import onion_scalaz.category_base.Compose
 import scalaz.{Equal, Maybe}
 import scalaz.Maybe.Just
 
@@ -8,6 +10,8 @@ import scala.annotation.tailrec
 
 // 类似于Compose[=>:[_,_]]
 trait Semigroup[F] {
+
+  self=>
 
   // 类似Compose[=>:[_,_]] 的compose方法
   def append(f1: F, f2: => F): F

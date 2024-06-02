@@ -1,7 +1,10 @@
 
 
-package onion_scalaz
+package onion_scalaz.category_base
 
+import onion_scalaz.<~~>
+import onion_scalaz.monoid.Semigroup
+import onion_scalaz.morphism.BiNaturalTrans
 import scalaz.Equal
 
 

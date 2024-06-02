@@ -1,9 +1,12 @@
-package onion_scalaz
+package onion_scalaz.monoid
 
+import onion_scalaz.<=>
+import onion_scalaz.category_base.Category
 import scalaz.{Equal, Maybe}
 
 // 类似Category[=>:[_,_]]
 trait Monoid[F] extends Semigroup[F] {
+  self =>
 
   // 类似于Category 中的 id方法
   def zero: F
@@ -66,7 +69,7 @@ object Monoid {
 }
 
 
-trait IsomorphismMonoid[F, G] extends Monoid[F] with IsomorphismSemigroup[F, G]{
+trait IsomorphismMonoid[F, G] extends Monoid[F] with IsomorphismSemigroup[F, G] {
   implicit def G: Monoid[G]
   ////
 

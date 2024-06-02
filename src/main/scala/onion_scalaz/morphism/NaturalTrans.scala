@@ -1,5 +1,5 @@
 
-package onion_scalaz
+package onion_scalaz.morphism
 
 trait NaturalTrans[F[_], G[_]] {
 

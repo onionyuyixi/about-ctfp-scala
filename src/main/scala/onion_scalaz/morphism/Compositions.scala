@@ -1,7 +1,5 @@
 package onion_scalaz.morphism
 
-import scalaz.Bifunctor
-
 
 trait FunctorComposition[F[_], G[_]] extends Functor[λ[x => F[G[x]]]] {
 

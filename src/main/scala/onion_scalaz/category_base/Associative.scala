@@ -1,4 +1,7 @@
-package onion_scalaz
+package onion_scalaz.category_base
+
+import onion_scalaz.<=>
+import onion_scalaz.morphism.IsoSet
 
 // 用来表达 交换律
 trait Associative[==>:[_, _]] {

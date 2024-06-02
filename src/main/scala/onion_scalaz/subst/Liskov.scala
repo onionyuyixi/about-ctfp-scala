@@ -1,4 +1,7 @@
-package onion_scalaz
+package onion_scalaz.subst
+
+import onion_scalaz.{<~<, ===}
+import onion_scalaz.category_base.Category
 
 
 sealed abstract class Liskov[-A, +B] {

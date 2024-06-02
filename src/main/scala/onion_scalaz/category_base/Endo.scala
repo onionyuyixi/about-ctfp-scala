@@ -1,4 +1,8 @@
-package onion_scalaz
+package onion_scalaz.category_base
+
+import onion_scalaz.monoid.Monoid
+import onion_scalaz.morphism.IsoFunctorTemplate
+import onion_scalaz.{<=>, IsoSet}
 
 
 // 类似于Id[X]
@@ -61,13 +65,6 @@ object Endo extends EndoInstances {
     override def from_[A](ga: A => A): Endo[A] = Endo(ga)
   }
 
-  def category[A] = new Category[Function1[Endo[A],Endo[A]]]{
-
-
-    override def id[A]: A => A = ???
-
-    override def compose[A, B, C](f: B => C, g: A => B): A => C = ???
-  }
 
 }
 

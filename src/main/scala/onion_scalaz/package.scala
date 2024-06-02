@@ -1,4 +1,5 @@
-import onion_scalaz.morphism.BijectionT
+import onion_scalaz.morphism._
+import onion_scalaz.subst.{Leibniz, Liskov}
 
 package object onion_scalaz {
 
