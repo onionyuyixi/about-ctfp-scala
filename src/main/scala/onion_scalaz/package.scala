@@ -1,3 +1,4 @@
+import onion_scalaz.morphism.BijectionT
 
 package object onion_scalaz {
 
@@ -24,5 +25,7 @@ package object onion_scalaz {
   type ~>[F[_], G[_]] = NaturalTrans[F, G]
 
   type <~[F[_], G[_]] = NaturalTrans[G, F]
+
+  type Bijection[A,B] = BijectionT[Id,Id,A,B]
 
 }
