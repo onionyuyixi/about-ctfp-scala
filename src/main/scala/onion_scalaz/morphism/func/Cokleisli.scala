@@ -1,7 +1,7 @@
 package onion_scalaz.morphism.co
 
 import onion_scalaz.category_base.Compose
-import onion_scalaz.morphism.Functor
+import onion_scalaz.morphism.{Functor, Monad}
 import scalaz.Profunctor
 
 // 意在 F[A]=>B

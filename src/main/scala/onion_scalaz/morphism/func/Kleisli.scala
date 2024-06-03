@@ -1,10 +1,14 @@
 package onion_scalaz.morphism
 
+import onion_scalaz.category_base.{Category, Compose}
+import onion_scalaz.morphism.Kleisli.kleisli
 import onion_scalaz.~>
 
 // type的含义 A=>M[B]
 final case class Kleisli[M[_], A, B](run: A => M[B]) {
   self =>
+
+  def apply(a: A): M[B] = run(a)
 
   def map[C](f: B => C)(implicit M: Functor[M]): Kleisli[M, A, C] =
     Kleisli(a => M.map(run(a))(f))
@@ -28,14 +32,34 @@ final case class Kleisli[M[_], A, B](run: A => M[B]) {
   }
 
   def transform[N[_]](f: M ~> N): Kleisli[N, A, B] =
-    Kleisli((a:A)=>f(run(a)))
+    Kleisli((a: A) => f(run(a)))
 
 
+  def >=>[C](k: Kleisli[M, B, C])(implicit b: Bind[M]): Kleisli[M, A, C] =
+    kleisli((a: A) => b.bind(this (a))(k.run))
 
 
 }
+
 
 object Kleisli {
 
+  def kleisli[M[_], A, B](f: A => M[B]): Kleisli[M, A, B] =
+    Kleisli(f)
 
+  implicit def kleisliCompose[F[_]](implicit F0: Bind[F]): Compose[Kleisli[F, *, *]] =
+    new KleisliCompose[F] {
+      override def F: Bind[F] = F0
+    }
+
+  //todo to imply
+  implicit def kleisliCategory[F[_]](implicit F0: Monad[F]): Category[Kleisli[F, *, *]] =
+    new Category[Kleisli[F, *, *]] {
+
+      override def id[A]: Kleisli[F, A, A] = ???
+
+      override def compose[A, B, C](f: Kleisli[F, B, C], g: Kleisli[F, A, B]): Kleisli[F, A, C] = ???
+    }
 }
+
+

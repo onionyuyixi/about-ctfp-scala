@@ -1,5 +1,6 @@
 package onion_scalaz.morphism
 
+import onion_scalaz.category_base.Compose
 import onion_scalaz.monoid.Monoid
 import onion_scalaz.traverse.{Foldable, Foldable1}
 
@@ -45,6 +46,16 @@ trait ApplyComposition[F[_], G[_]] extends Apply[λ[a => F[G[a]]]] with FunctorC
 
 
   }
+}
+
+
+trait KleisliCompose[F[_]] extends Compose[Kleisli[F, *, *]] {
+
+  implicit def F: Bind[F]
+
+  // 可以观察出 这里compose 实际上是Bind[F[_]] 在其作用
+  // 盖Bind的核心在 A=>F[B] 这正好跟Kleisli的寓意 相吻合
+  def compose[A, B, C](bc: Kleisli[F, B, C], ab: Kleisli[F, A, B]): Kleisli[F, A, C] = ab >=> bc
 }
 
 

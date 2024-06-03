@@ -64,9 +64,16 @@ trait BiFunctor[F[_, _]] {
       override def map[A, B](fa: Id[A])(f: A => B): Id[B] = f(fa)
     }, H0)
 
-
-
   }
+
+
+  def tupleBiFunctor: BiFunctor[Tuple2] = new BiFunctor[Tuple2] {
+    override def bimap[A, B, C, D](fab: (A, B))(f: A => C, g: B => D): (C, D) = fab match {
+      case (a,b)=>(f(a),g(b))
+    }
+  }
+
+
 
 
 }

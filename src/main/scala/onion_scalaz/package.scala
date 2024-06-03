@@ -27,6 +27,12 @@ package object onion_scalaz {
 
   type <~[F[_], G[_]] = NaturalTrans[G, F]
 
-  type Bijection[A,B] = BijectionT[Id,Id,A,B]
+  type Bijection[A, B] = BijectionT[Id, Id, A, B]
+
+  type ReaderT[E, F[_], A] = Kleisli[F, E, A]
+
+  type Reader[E, A] = ReaderT[E, Id, A]
+
+  type WriterT[F[_],E,A] = ???
 
 }

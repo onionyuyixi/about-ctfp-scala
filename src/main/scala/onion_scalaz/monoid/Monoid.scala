@@ -71,6 +71,7 @@ object Monoid {
 
   implicit val monoidInvariantFunctor: InvariantFunctor[Monoid] =
     new InvariantFunctor[Monoid] {
+
       def xmap[A, B](ma: Monoid[A], f: A => B, g: B => A): Monoid[B] = new Monoid[B] {
         def zero: B = f(ma.zero)
 

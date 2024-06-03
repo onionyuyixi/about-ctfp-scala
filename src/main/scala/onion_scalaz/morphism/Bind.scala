@@ -11,7 +11,11 @@ trait Bind[F[_]] extends Apply[F] {
   // 按较之Apply/Functor中的f  这里的f是跨容器的
   // 所以它这里就不可能是 lift作用
   // bind的意思就是 将本身数据 与容器相 morphism
+  // 至于f:A=>F[B] 其意义与Kleisli 差不多
   def bind[A, B](fa: F[A])(f: A => F[B]): F[B]
+
+  def bindFromKleisli[A, B](fa: F[A])(kleisli: Kleisli[F, A, B]): F[B] =
+    bind(fa)(kleisli.run)
 
   def join[A](ffa: F[F[A]]): F[A] = bind(ffa)(identity)
 

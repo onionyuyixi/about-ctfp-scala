@@ -8,6 +8,8 @@ trait Comonad[F[_]] extends Cobind[F] {
 
   def copoint[A](fa: F[A]): A
 
+  final def copure[A](fa: F[A]): A = copoint(fa)
+
 
   trait ComonadLaws extends CobindLaws {
     def cobindLeftIdentity[A](fa: F[A])(implicit F: Equal[F[A]]): Boolean =

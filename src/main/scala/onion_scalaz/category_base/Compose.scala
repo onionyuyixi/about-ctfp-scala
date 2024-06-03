@@ -7,7 +7,7 @@ import onion_scalaz.monoid.Semigroup
 import onion_scalaz.morphism.BiNaturalTrans
 import scalaz.Equal
 
-
+// 参考 Endomorphic上的注解
 trait Compose[=>:[_, _]] {
 
   self =>
