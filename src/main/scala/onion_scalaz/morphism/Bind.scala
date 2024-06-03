@@ -1,6 +1,7 @@
 package onion_scalaz.morphism
 
 import onion_scalaz.<~>
+import scalaz.Equal
 
 trait Bind[F[_]] extends Apply[F] {
 
@@ -18,6 +19,19 @@ trait Bind[F[_]] extends Apply[F] {
   def mproduct[A, B](fa: F[A])(f: Function[A, F[B]]): F[(A, B)] =
     bind(fa)(a => map(f(a))(b => (a, b)))
 
+  trait BindLaw extends ApplyLaw {
+    /**
+     * As with semigroups, monadic effects only change when their
+     * order is changed, not when the order in which they're
+     * combined changes.
+     */
+    def associativeBind[A, B, C](fa: F[A], f: A => F[B], g: B => F[C])(implicit FC: Equal[F[C]]): Boolean =
+      FC.equal(bind(bind(fa)(f))(g), bind(fa)((a: A) => bind(f(a))(g)))
+
+    /** `ap` is consistent with `bind`. */
+    def apLikeDerived[A, B](fa: F[A], f: F[A => B])(implicit FB: Equal[F[B]]): Boolean =
+      FB.equal(ap(fa)(f), bind(f)(f => map(fa)(f)))
+  }
 
 }
 

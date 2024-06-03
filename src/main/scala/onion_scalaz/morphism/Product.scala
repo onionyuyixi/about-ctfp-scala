@@ -34,6 +34,23 @@ trait ProductApplicative[F[_], G[_]] extends Applicative[λ[α => (F[α], G[α])
   override def point[A](a: => A): (F[A], G[A]) = (F.point(a), G.point(a))
 }
 
+trait ProductBind[F[_], G[_]] extends Bind[λ[α => (F[α], G[α])]] with ProductApply[F, G] {
+  implicit def F: Bind[F]
+
+  implicit def G: Bind[G]
+
+  override def bind[A, B](fa: (F[A], G[A]))(f: A => (F[B], G[B])) =
+    (F.bind(fa._1)(f.andThen(_._1)), G.bind(fa._2)(f.andThen(_._2)))
+}
+
+trait ProductMonad[F[_], G[_]] extends Monad[λ[α => (F[α], G[α])]] with ProductBind[F, G]
+  with ProductApplicative[F, G] {
+
+  implicit def F: Monad[F]
+
+  implicit def G: Monad[G]
+
+}
 
 trait ProductFoldable[F[_], G[_]] extends Foldable[λ[α => (F[α], G[α])]] {
   implicit def F: Foldable[F]
