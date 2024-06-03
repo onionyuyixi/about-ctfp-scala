@@ -47,6 +47,18 @@ trait ApplyComposition[F[_], G[_]] extends Apply[λ[a => F[G[a]]]] with FunctorC
   }
 }
 
+
+trait ApplicativeComposition[F[_], G[_]] extends ApplyComposition[F, G] with Applicative[λ[a => F[G[a]]]] {
+
+
+  implicit def F: Applicative[F]
+
+  implicit def G: Applicative[G]
+
+  override def point[A](a: => A): F[G[A]] = F.point(G.point(a))
+
+}
+
 trait CompositionFoldable[F[_], G[_]] extends Foldable[λ[α => F[G[α]]]] {
   implicit def F: Foldable[F]
 
