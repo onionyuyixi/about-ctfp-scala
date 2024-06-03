@@ -52,6 +52,20 @@ trait ProductMonad[F[_], G[_]] extends Monad[λ[α => (F[α], G[α])]] with Prod
 
 }
 
+
+private trait ProductBifunctor[F[_, _], G[_, _]] extends BiFunctor[λ[(α, β) => (F[α, β], G[α, β])]] {
+
+  implicit def F: BiFunctor[F]
+
+  implicit def G: BiFunctor[G]
+
+  override def bimap[A, B, C, D](fab: (F[A, B], G[A, B]))(f: A => C, g: B => D): (F[C, D], G[C, D]) =
+    (F.bimap(fab._1)(f, g), G.bimap(fab._2)(f, g))
+
+
+}
+
+
 trait ProductFoldable[F[_], G[_]] extends Foldable[λ[α => (F[α], G[α])]] {
   implicit def F: Foldable[F]
 

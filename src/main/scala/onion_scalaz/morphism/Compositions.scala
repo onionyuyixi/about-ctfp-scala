@@ -16,14 +16,14 @@ trait FunctorComposition[F[_], G[_]] extends Functor[λ[x => F[G[x]]]] {
 
 }
 
-trait BiFunctorComposition[F[_], G[_, _]] extends BiFunctor[λ[(α, β) => F[G[α, β]]]] {
+trait BiFunctorComposition[F[_, _], G[_, _]] extends BiFunctor[λ[(α, β) => F[G[α, β], G[α, β]]]] {
 
-  implicit def F: Functor[F]
+  implicit def F: BiFunctor[F]
 
   implicit def G: BiFunctor[G]
 
-  def map[A, B, C, D](gab: G[A, B]): F[G[C, D]] = ???
-
+  override def bimap[A, B, C, D](fab: F[G[A, B], G[A, B]])(f: A => C, g: B => D): F[G[C, D], G[C, D]] =
+    F.bimap(fab)((a: G[A, B]) => G.bimap(a)(f, g), (a: G[A, B]) => G.bimap(a)(f, g))
 
 }
 
