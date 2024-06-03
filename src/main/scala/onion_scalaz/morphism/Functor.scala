@@ -1,7 +1,7 @@
 
 package onion_scalaz.morphism
 
-import onion_scalaz.{<~<, <~>, NaturalTrans}
+import onion_scalaz.{<~<, <~>}
 import scalaz.Equal
 
 
@@ -16,6 +16,9 @@ trait Functor[F[_]] extends InvariantFunctor[F] {
   def apply[A, B](fa: F[A])(f: A => B): F[B] = map(fa)(f)
 
   def map[A, B](fa: F[A])(f: A => B): F[B]
+
+  def xmap[A, B](fa: F[A], f: A => B, g: B => A): F[B] =
+    map(fa)(f)
 
 
   def strengthL[A, B](a: A, fb: F[B]): F[(A, B)] = map(fb)((a, _))

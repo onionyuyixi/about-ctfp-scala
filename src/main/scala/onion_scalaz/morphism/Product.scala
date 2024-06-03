@@ -3,7 +3,7 @@ package onion_scalaz.morphism
 import onion_scalaz.monoid.Monoid
 import onion_scalaz.traverse.{Foldable, Foldable1}
 
-trait Product[F[_], G[_]] extends Functor[λ[a => (F[a], G[a])]] {
+trait ProductFunctor[F[_], G[_]] extends Functor[λ[a => (F[a], G[a])]] {
 
   implicit def F: Functor[F]
 
@@ -14,6 +14,16 @@ trait Product[F[_], G[_]] extends Functor[λ[a => (F[a], G[a])]] {
     (F.lift(f)(fa._1), G.lift(f)(fa._2))
 }
 
+trait ProductApply[F[_], G[_]] extends Apply[λ[α => (F[α], G[α])]] with ProductFunctor[F, G] {
+
+  implicit def F: Apply[F]
+
+  implicit def G: Apply[G]
+
+  override def ap[A, B](fa: => (F[A], G[A]))(f: => (F[A => B], G[A => B])): (F[B], G[B]) =
+    (F.ap(fa._1)(f._1), G.ap(fa._2)(f._2))
+
+}
 
 trait ProductFoldable[F[_], G[_]] extends Foldable[λ[α => (F[α], G[α])]] {
   implicit def F: Foldable[F]
@@ -33,4 +43,5 @@ trait ProductFoldable[F[_], G[_]] extends Foldable[λ[α => (F[α], G[α])]] {
 trait ProductFoldable1[F[_], G[_]] extends Foldable1[λ[α => (F[α], G[α])]] with ProductFoldable[F, G] {
 
 }
+
 

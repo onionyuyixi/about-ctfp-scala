@@ -2,6 +2,7 @@ package onion_scalaz.monoid
 
 import onion_scalaz.<=>
 import onion_scalaz.category_base.Category
+import onion_scalaz.morphism.InvariantFunctor
 import scalaz.{Equal, Maybe}
 
 // 类似Category[=>:[_,_]]
@@ -46,6 +47,7 @@ trait Monoid[F] extends Semigroup[F] {
     def rightIdentity(a: F)(implicit F: Equal[F]): Boolean = F.equal(a, append(a, zero))
   }
 
+
 }
 
 
@@ -65,6 +67,16 @@ object Monoid {
 
     override def append(f1: A, f2: => A): A = f.curried(f1)(f2)
   }
+
+
+  implicit val monoidInvariantFunctor: InvariantFunctor[Monoid] =
+    new InvariantFunctor[Monoid] {
+      def xmap[A, B](ma: Monoid[A], f: A => B, g: B => A): Monoid[B] = new Monoid[B] {
+        def zero: B = f(ma.zero)
+
+        def append(x: B, y: => B): B = f(ma.append(g(x), g(y)))
+      }
+    }
 
 }
 
