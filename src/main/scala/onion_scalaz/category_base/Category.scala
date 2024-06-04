@@ -5,7 +5,7 @@ package onion_scalaz.category_base
 import onion_scalaz.monoid.Monoid
 import onion_scalaz.morphism.BiNaturalTrans
 import onion_scalaz.{<~~>, IsoBifunctor}
-import scalaz.{Equal, IsomorphismCompose}
+import scalaz.Equal
 
 //
 trait Category[=>:[_, _]] extends Compose[=>:] {
@@ -58,11 +58,11 @@ trait Category[=>:[_, _]] extends Compose[=>:] {
 
 }
 
-trait IsoCategory[F[_, _], G[_, _]] extends Category[F] with IsomorphismCompose[F, G] {
+trait IsomorphismCategory[F[_, _], G[_, _]] extends Category[F] with IsomorphismCompose[F, G] {
 
-  implicit def C: Category[G]
+  implicit def G: Category[G]
 
-  override def id[A]: F[A, A] = iso.from(C.id)
+  override def id[A]: F[A, A] = iso.from(G.id)
 }
 
 object Category {
