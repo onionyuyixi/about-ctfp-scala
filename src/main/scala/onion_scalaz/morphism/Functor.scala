@@ -77,6 +77,17 @@ object Functor {
     override def iso: F <~> G = D
   }
 
+  implicit def readerFunctor[E]: Functor[Function[E, *]] = new Functor[E => *] {
+    override def map[A, B](fa: E => A)(f: A => B): E => B =
+      fa andThen f
+  }
+
+  implicit val readerFunctor: Functor[Function0] = new Functor[Function0] {
+    override def map[A, B](fa: () => A)(f: A => B): () => B =
+      () => f(fa())
+  }
+
+
 }
 
 
