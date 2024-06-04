@@ -1,7 +1,7 @@
 package onion_scalaz.morphism
 
 import onion_scalaz.category_base.Compose
-import onion_scalaz.monoid.Monoid
+import onion_scalaz.monoid.{Monoid, Plus, PlusEmpty}
 import onion_scalaz.traverse.{Foldable, Foldable1}
 
 
@@ -69,6 +69,22 @@ trait ApplicativeComposition[F[_], G[_]] extends ApplyComposition[F, G] with App
   override def point[A](a: => A): F[G[A]] = F.point(G.point(a))
 
 }
+
+trait PlusComposition[F[_], G[_]] extends Plus[λ[α => F[G[α]]]] {
+
+  implicit def F: Plus[F]
+
+  override def plus[A](a: F[G[A]], b: => F[G[A]]): F[G[A]] =
+    F.plus(a, b)
+}
+
+trait PlusEmptyComposition[F[_], G[_]] extends PlusEmpty[λ[α => F[G[α]]]] with PlusComposition[F, G] {
+
+  implicit def F: PlusEmpty[F]
+
+  override def empty[A]: F[G[A]] = F.empty[G[A]]
+}
+
 
 trait CompositionFoldable[F[_], G[_]] extends Foldable[λ[α => F[G[α]]]] {
   implicit def F: Foldable[F]

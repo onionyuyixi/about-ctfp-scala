@@ -1,6 +1,6 @@
 package onion_scalaz.morphism
 
-import onion_scalaz.monoid.Monoid
+import onion_scalaz.monoid.{Monoid, Plus, PlusEmpty}
 import onion_scalaz.traverse.{Foldable, Foldable1}
 
 trait ProductFunctor[F[_], G[_]] extends Functor[λ[a => (F[a], G[a])]] {
@@ -63,6 +63,25 @@ private trait ProductBifunctor[F[_, _], G[_, _]] extends BiFunctor[λ[(α, β) =
     (F.bimap(fab._1)(f, g), G.bimap(fab._2)(f, g))
 
 
+}
+
+
+trait ProductPlus[F[_], G[_]] extends Plus[λ[α => (F[α], G[α])]] {
+  implicit def F: Plus[F]
+
+  implicit def G: Plus[G]
+
+  def plus[A](a: (F[A], G[A]), b: => (F[A], G[A])): (F[A], G[A]) =
+    (F.plus(a._1, b._1), G.plus(a._2, b._2))
+}
+
+trait ProductPlusEmpty[F[_], G[_]] extends PlusEmpty[λ[α => (F[α], G[α])]] with ProductPlus[F, G] {
+
+  implicit def F: PlusEmpty[F]
+
+  implicit def G: PlusEmpty[G]
+
+  override def empty[A]: (F[A], G[A]) = (F.empty, G.empty)
 }
 
 
