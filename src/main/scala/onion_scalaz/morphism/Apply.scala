@@ -62,7 +62,7 @@ trait Apply[F[_]] extends Functor[F] {
 
   // tuple方法是apply的特殊形式
   def tuple2[A, B](fa: => F[A], fb: => F[B]): F[(A, B)] =
-    apply2(fa, fb)((_, _))
+    apply2(fa, fb)((_,_))
 
   def tuple3[A, B, C](fa: => F[A], fb: => F[B], fc: => F[C]): F[(A, B, C)] =
     apply3(fa, fb, fc)((_, _, _))

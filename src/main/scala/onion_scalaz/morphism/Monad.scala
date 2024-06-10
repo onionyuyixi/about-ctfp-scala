@@ -18,9 +18,9 @@ trait Monad[F[_]] extends Applicative[F] with Bind[F] {
 
   def product[G[_]](implicit G0: Monad[G]): Monad[λ[α => (F[α], G[α])]] =
     new ProductMonad[F, G] {
-      def F = self
+      def F: Monad[F] = self
 
-      def G = G0
+      def G: Monad[G] = G0
     }
 
   trait MonadLaw extends ApplicativeLaw with BindLaw {

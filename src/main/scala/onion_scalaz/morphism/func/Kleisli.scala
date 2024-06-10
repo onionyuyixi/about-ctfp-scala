@@ -38,6 +38,17 @@ final case class Kleisli[M[_], A, B](run: A => M[B]) {
   def >=>[C](k: Kleisli[M, B, C])(implicit b: Bind[M]): Kleisli[M, A, C] =
     kleisli((a: A) => b.bind(this (a))(k.run))
 
+  // 这里表达的其实跟Bind是一样的 参考Bind bind方法注解
+  def =<<(a: M[A])(implicit b: Bind[M]): M[B] =
+    b.bind(a)(run)
+
+  def mapK[N[_], C](f: M[B] => N[C]): Kleisli[N, A, C] =
+    Kleisli(a => f(run(a)))
+
+  def mapT[N[_], C](f: M[B] => N[C]): Kleisli[N, A, C] =
+    Kleisli(run andThen f)
+
+
 
 }
 
