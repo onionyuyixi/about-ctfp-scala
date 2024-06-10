@@ -1,4 +1,4 @@
-package onion_scalaz.morphism.func
+package onion_scalaz.morphism.functionusage
 
 import onion_scalaz.{Id, Reader, ReaderT}
 import onion_scalaz.morphism.Kleisli

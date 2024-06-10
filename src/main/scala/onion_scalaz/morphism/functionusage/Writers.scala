@@ -1,4 +1,4 @@
-package onion_scalaz.morphism.func
+package onion_scalaz.morphism.functionusage
 
 
 object Writer {

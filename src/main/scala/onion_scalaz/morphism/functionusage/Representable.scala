@@ -1,4 +1,4 @@
-package onion_scalaz.morphism.func
+package onion_scalaz.morphism.functionusage
 
 import onion_scalaz.morphism.Functor
 import scalaz.Equal
