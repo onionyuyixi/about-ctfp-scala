@@ -1,5 +1,8 @@
 package onion_scalaz.morphism.functionusage
 
+import onion_scalaz.{Id, WriterT}
+import scalaz.WriterT
+
 
 object Writer {
 

@@ -1,6 +1,7 @@
 package onion_scalaz.morphism
 
 import onion_scalaz.<~>
+import onion_scalaz.morphism.functors.{Functor, IsomorphismFunctor, ProductApply}
 import scalaz.{Equal, Id}
 
 

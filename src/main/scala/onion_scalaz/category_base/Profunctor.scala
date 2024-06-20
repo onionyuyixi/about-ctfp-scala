@@ -1,7 +1,7 @@
 package onion_scalaz.category_base
 
 import onion_scalaz.<~~>
-import onion_scalaz.morphism.{Functor, InvariantFunctor}
+import onion_scalaz.morphism.functors.{Functor, InvariantFunctor}
 import scalaz.Equal
 
 // Profunctors are covariant on the right and contravariant on the left.

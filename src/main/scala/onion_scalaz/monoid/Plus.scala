@@ -1,6 +1,7 @@
 package onion_scalaz.monoid
 
-import onion_scalaz.morphism.{Apply, PlusComposition, ProductPlus}
+import onion_scalaz.morphism.functors.ProductPlus
+import onion_scalaz.morphism.{Apply, PlusComposition}
 import scalaz.Equal
 import scalaz.Isomorphism.<~>
 

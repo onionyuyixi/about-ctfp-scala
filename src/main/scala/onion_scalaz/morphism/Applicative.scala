@@ -1,6 +1,7 @@
 package onion_scalaz.morphism
 
 import onion_scalaz.<~>
+import onion_scalaz.morphism.functors.ProductApplicative
 import scalaz.Equal
 
 trait Applicative[F[_]] extends Apply[F] {

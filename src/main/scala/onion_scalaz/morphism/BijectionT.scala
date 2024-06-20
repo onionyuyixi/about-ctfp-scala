@@ -1,5 +1,7 @@
 package onion_scalaz.morphism
 
+import onion_scalaz.morphism.functionusage.Kleisli
+
 
 // 双端映射 但涉及了两个Functor F G  必然需要Natural Trans
 // 当F G都是Id的时候 就获得的满射 A=>B B=>A

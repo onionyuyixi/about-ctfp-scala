@@ -2,6 +2,8 @@ package onion_scalaz.morphism
 
 import onion_scalaz.category_base.Compose
 import onion_scalaz.monoid.{Monoid, Plus, PlusEmpty}
+import onion_scalaz.morphism.functionusage.Kleisli
+import onion_scalaz.morphism.functors.{BiFunctor, Functor}
 import onion_scalaz.traverse.{Foldable, Foldable1}
 
 

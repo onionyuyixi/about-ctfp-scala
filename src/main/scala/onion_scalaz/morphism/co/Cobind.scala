@@ -1,7 +1,7 @@
 package onion_scalaz.morphism.co
 
 import onion_scalaz.<~>
-import onion_scalaz.morphism.{Functor, IsomorphismFunctor}
+import onion_scalaz.morphism.functors.{Functor, IsomorphismFunctor}
 import scalaz.Equal
 
 trait Cobind[F[_]] extends Functor[F] {

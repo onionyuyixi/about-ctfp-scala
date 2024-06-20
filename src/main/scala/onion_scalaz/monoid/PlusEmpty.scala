@@ -1,7 +1,8 @@
 package onion_scalaz.monoid
 
 import onion_scalaz.<~>
-import onion_scalaz.morphism.{Applicative, PlusEmptyComposition, ProductPlusEmpty}
+import onion_scalaz.morphism.functors.ProductPlusEmpty
+import onion_scalaz.morphism.{Applicative, PlusEmptyComposition}
 import scalaz.Equal
 
 
@@ -52,7 +53,7 @@ object PlusEmpty {
 
 
   def fromIso[F[_], G[_]](D: F <~> G)(implicit E: PlusEmpty[G]): PlusEmpty[F] =
-    new IsomorphismPlusEmpty[F, G]  {
+    new IsomorphismPlusEmpty[F, G] {
       override def G: PlusEmpty[G] = E
 
       override def iso: F <~> G = D

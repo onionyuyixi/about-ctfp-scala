@@ -1,7 +1,8 @@
 package onion_scalaz.traverse
 
-import onion_scalaz.monoid.{Monoid, Semigroup}
-import onion_scalaz.morphism.{CompositionFoldable, ProductFoldable}
+import onion_scalaz.monoid.Monoid
+import onion_scalaz.morphism.CompositionFoldable
+import onion_scalaz.morphism.functors.ProductFoldable
 
 trait Foldable[F[_]] {
   self =>

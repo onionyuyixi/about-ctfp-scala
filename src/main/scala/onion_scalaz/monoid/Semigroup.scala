@@ -13,7 +13,7 @@ trait Semigroup[F] {
 
   self=>
 
-  // 类似Compose[=>:[_,_]] 的compose方法
+  // 参考plus
   def append(f1: F, f2: => F): F
 
 

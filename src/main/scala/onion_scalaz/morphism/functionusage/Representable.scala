@@ -7,6 +7,7 @@ import scalaz.Equal
 //Representable functors, that is to say, those with isomorphisms to and from [a](X => a).
 // As such, all typeclasses and operations on [a](X => a),
 // that is, fixed in X, can be trivially derived for F.
+// one Functor one dataStructure
 abstract class Representable[F[_], X](implicit val F: Functor[F]) {
 
   // 考虑到F[X]  rep方法实际表达的意思是 F[X]=>(X=>A)=>F[A]
@@ -32,7 +33,7 @@ abstract class Representable[F[_], X](implicit val F: Functor[F]) {
 }
 
 
-sealed abstract class RepresentableInstances {
+object RepresentableInstances {
 
 
   implicit def readerRepresentable[E]: Representable[E => *, E] =
@@ -46,7 +47,7 @@ sealed abstract class RepresentableInstances {
     new Representable[Function0, Unit] {
       def rep[A](f: Unit => A): () => A = () => f(())
 
-      def unrep[A](f: () => A): Unit => A = u => f()
+      def unrep[A](f: () => A): Unit => A = _ => f()
     }
 
   implicit def curryRepresentable[E]: Representable[E => *, (E, Unit)] =
@@ -56,4 +57,22 @@ sealed abstract class RepresentableInstances {
       def unrep[A](f: E => A): ((E, Unit)) => A = e => f(e._1)
     }
 
+  implicit val streamFunctor: Functor[Stream] = new Functor[Stream] {
+    override def map[A, B](fa: Stream[A])(f: A => B): Stream[B] =
+      Stream[B](() => f(fa.h()), () => map(fa.t())(f))
+  }
+
+  implicit val intStreamRepresentable: Representable[Stream, Int] = new Representable[Stream, Int]() {
+
+    override def rep[A](f: Int => A): Stream[A] =
+      Stream[A](() => f(0), () => rep(f compose (_ + 1)))
+
+    override def unrep[A](fa: Stream[A]): Int => A = (n: Int) => {
+      if (n == 0) fa.h()
+      else unrep(fa.t())(n - 1)
+    }
+
+  }
 }
+
+case class Stream[X](h: () => X, t: () => Stream[X])

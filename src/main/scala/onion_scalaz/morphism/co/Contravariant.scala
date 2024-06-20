@@ -1,7 +1,7 @@
 package onion_scalaz.morphism.co
 
+import onion_scalaz.morphism.functors.{Functor, InvariantFunctor, IsomorphismInvariantFunctor}
 import onion_scalaz.{<~<, <~>}
-import onion_scalaz.morphism.{Functor, InvariantFunctor, IsomorphismInvariantFunctor}
 import scalaz.Equal
 
 trait Contravariant[F[_]] extends InvariantFunctor[F] {

@@ -1,6 +1,7 @@
 
-package onion_scalaz.morphism
+package onion_scalaz.morphism.functors
 
+import onion_scalaz.morphism.FunctorComposition
 import onion_scalaz.{<~<, <~>}
 import scalaz.Equal
 

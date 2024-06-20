@@ -1,5 +1,7 @@
 package onion_scalaz.morphism
 
+import onion_scalaz.morphism.functors.{BiFunctor, Functor}
+
 
 trait LeftFunctor[F[_, _], X] extends Functor[F[*, X]] {
 

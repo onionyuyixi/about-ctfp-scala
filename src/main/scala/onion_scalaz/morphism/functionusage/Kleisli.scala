@@ -1,10 +1,12 @@
-package onion_scalaz.morphism
+package onion_scalaz.morphism.functionusage
 
 import onion_scalaz.category_base.{Category, Compose}
-import onion_scalaz.morphism.Kleisli.kleisli
+import onion_scalaz.morphism.functionusage.Kleisli.kleisli
+import onion_scalaz.morphism.functors.Functor
+import onion_scalaz.morphism.{Bind, KleisliCompose, Monad}
 import onion_scalaz.~>
 
-// type的含义 A=>M[B]
+// type的含义 A=>M[B] 跟Monad/Bind 的语义已经相近了 参看bind方法
 final case class Kleisli[M[_], A, B](run: A => M[B]) {
   self =>
 

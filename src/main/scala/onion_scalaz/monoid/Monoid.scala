@@ -2,7 +2,7 @@ package onion_scalaz.monoid
 
 import onion_scalaz.<=>
 import onion_scalaz.category_base.Category
-import onion_scalaz.morphism.InvariantFunctor
+import onion_scalaz.morphism.functors.InvariantFunctor
 import scalaz.{Equal, Maybe}
 
 // 类似Category[=>:[_,_]]

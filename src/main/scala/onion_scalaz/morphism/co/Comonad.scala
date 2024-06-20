@@ -3,6 +3,8 @@ package onion_scalaz.morphism.co
 import onion_scalaz.<~>
 import scalaz.Equal
 
+import scala.annotation.tailrec
+
 trait Comonad[F[_]] extends Cobind[F] {
 
 
@@ -24,7 +26,9 @@ trait Comonad[F[_]] extends Cobind[F] {
 
 }
 
-object Cobind {
+case class Stream[T](h: () => T, t: () => Stream[T])
+
+object Comonad {
 
   @inline def apply[F[_]](implicit F: Comonad[F]): Cobind[F] = F
 
@@ -36,6 +40,28 @@ object Cobind {
       override def iso: F <~> G = D
     }
 
+  implicit def streamComonad: Comonad[Stream] = new Comonad[Stream] {
+
+
+    @tailrec
+    override def copoint[A](fa: Stream[A]): A =
+      fa match {
+        case Stream(h, t) => Option(h) match {
+          case Some(value) => value()
+          case None => copoint(t())
+        }
+      }
+
+    override def cobind[A, B](fa: Stream[A])(f: Stream[A] => B): Stream[B] =
+      map(cojoin(fa))(f)
+
+
+    override def map[A, B](fa: Stream[A])(f: A => B): Stream[B] =
+      fa match {
+        case Stream(h, t) =>
+          Stream(() => f(h()), () => map(t())(f))
+      }
+  }
 }
 
 trait IsomorphismComonad[F[_], G[_]] extends Comonad[F] with IsomorphismCobind[F, G] {

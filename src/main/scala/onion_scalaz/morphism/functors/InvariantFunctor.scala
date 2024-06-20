@@ -1,6 +1,7 @@
-package onion_scalaz.morphism
+package onion_scalaz.morphism.functors
 
 import onion_scalaz._
+import onion_scalaz.morphism.NaturalTrans
 import scalaz.Equal
 
 // 不变的Functor xmap 有两个函数

@@ -1,5 +1,6 @@
-package onion_scalaz.morphism
+package onion_scalaz.morphism.functors
 
+import onion_scalaz.morphism.{BiFunctorComposition, LeftFunctor, RightFunctor}
 import onion_scalaz.{<~~>, Id}
 
 // type parameter 有两个参数

@@ -1,6 +1,7 @@
-package onion_scalaz.morphism
+package onion_scalaz.morphism.functors
 
 import onion_scalaz.monoid.{Monoid, Plus, PlusEmpty}
+import onion_scalaz.morphism.{Applicative, Apply, Bind, Monad}
 import onion_scalaz.traverse.{Foldable, Foldable1}
 
 trait ProductFunctor[F[_], G[_]] extends Functor[λ[a => (F[a], G[a])]] {

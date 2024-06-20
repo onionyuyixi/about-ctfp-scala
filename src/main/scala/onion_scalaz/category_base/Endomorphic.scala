@@ -1,8 +1,9 @@
 package onion_scalaz.category_base
 
 import onion_scalaz.monoid.{Monoid, Semigroup}
-import onion_scalaz.morphism.co.{Cobind, Cokleisli, Comonad}
-import onion_scalaz.morphism.{Bind, Kleisli, Monad}
+import onion_scalaz.morphism.co.{Cobind, Cokleisli}
+import onion_scalaz.morphism.functionusage.Kleisli
+import onion_scalaz.morphism.{Bind, Monad}
 
 
 // =>:[_, _]  表示Function Type
@@ -47,8 +48,8 @@ sealed abstract class EndomorphicInstances1 extends EndomorphicInstances2 {
   implicit def kleisliEndoSemigroup[F[_] : Bind, A]: Semigroup[Endomorphic[Kleisli[F, *, *], A]] =
     endomorphicSemigroup[Kleisli[F, *, *], A]
 
-  implicit def cokleisliEndoSemigroup[F[_] : Cobind, A]: Semigroup[Endomorphic[Cokleisli[F, *, *], A]] =
-    endomorphicSemigroup[Cokleisli[F, *, *], A]
+//  implicit def cokleisliEndoSemigroup[F[_] : Cobind, A]: Semigroup[Endomorphic[Cokleisli[F, *, *], A]] =
+//    endomorphicSemigroup[Cokleisli[F, *, *], A]
 
 }
 

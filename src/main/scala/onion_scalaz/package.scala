@@ -1,4 +1,5 @@
 import onion_scalaz.morphism._
+import onion_scalaz.morphism.functionusage.Kleisli
 import onion_scalaz.subst.{Leibniz, Liskov}
 
 package object onion_scalaz {
@@ -33,6 +34,6 @@ package object onion_scalaz {
 
   type Reader[E, A] = ReaderT[E, Id, A]
 
-  type WriterT[F[_],E,A] = ???
+//  type WriterT[F[_],E,A] = ???
 
 }

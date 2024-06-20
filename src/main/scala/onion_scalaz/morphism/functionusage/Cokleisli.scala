@@ -1,8 +1,9 @@
 package onion_scalaz.morphism.co
 
-import onion_scalaz.category_base.Compose
-import onion_scalaz.morphism.{Functor, Monad}
-import scalaz.Profunctor
+import onion_scalaz.category_base.{Arrow, Compose}
+import onion_scalaz.morphism.Monad
+import onion_scalaz.morphism.functors.Functor
+import scalaz.{BindRec, Profunctor}
 
 // 意在 F[A]=>B
 final case class Cokleisli[F[_], A, B](run: F[A] => B) {
@@ -36,9 +37,9 @@ final case class Cokleisli[F[_], A, B](run: F[A] => B) {
 
 }
 
-object Cokleisli extends CokleisliInstances {
-
-}
+//object Cokleisli extends CokleisliInstances {
+//
+//}
 
 private trait CokleisliCompose[F[_]] extends Compose[Cokleisli[F, *, *]] {
   implicit def F: Cobind[F]
@@ -73,12 +74,12 @@ sealed abstract class CokleisliInstances0 {
     }
 }
 
-sealed abstract class CokleisliInstances extends CokleisliInstances0 {
-  implicit def cokleisliMonad[F[_], R]: Monad[Cokleisli[F, R, *]] & BindRec[Cokleisli[F, R, *]] =
-    new CokleisliMonad[F, R] {}
-
-  implicit def cokleisliArrow[F[_]](implicit F0: Comonad[F]): Arrow[Cokleisli[F, *, *]] & ProChoice[Cokleisli[F, *, *]] =
-    new CokleisliArrow[F] {
-      override def F = F0
-    }
-}
+//sealed abstract class CokleisliInstances extends CokleisliInstances0 {
+//  implicit def cokleisliMonad[F[_], R]: Monad[Cokleisli[F, R, *]] & BindRec[Cokleisli[F, R, *]] =
+//    new CokleisliMonad[F, R] {}
+//
+//  implicit def cokleisliArrow[F[_]](implicit F0: Comonad[F]): Arrow[Cokleisli[F, *, *]] & ProChoice[Cokleisli[F, *, *]] =
+//    new CokleisliArrow[F] {
+//      override def F = F0
+//    }
+//}
