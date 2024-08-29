@@ -36,6 +36,12 @@ case class Mul(e1: Expr, e2: Expr) extends Expr
 case class Neg(e: Expr) extends Expr
 
 // 不停地在F上嵌套 类似tree的结构
+// Applying an endofunctor infinitely many times produces a fixed point,
+// an object defined as: 𝐹𝑖𝑥 𝑓 = 𝑓 (𝐹𝑖𝑥 𝑓 )
+// The intuition behind this definition is that, since we applied 𝑓 infinitely
+// many times to get 𝐹𝑖𝑥 𝑓 , applying it one more time doesn’t change anything
+// f 就是类似Expr的ADT structure data
+// algebras over a given endofunctor 𝐹 form a category  可以参考Endo
 case class Fix[F[_]](x: F[Fix[F]])
 
 object Fix {
@@ -97,6 +103,16 @@ object Algebra {
 
   }
 
+  def ana[F[_], A](coalg: A => F[A])(implicit F: Functor[F]): A => Fix[F] = {
+
+    val func1: F[A] => F[Fix[F]] = F.lift(ana(coalg))
+
+    val func2: A => F[Fix[F]] = func1 compose coalg
+
+    Fix.apply[F] compose func2
+  }
+
+
 }
 
 
@@ -126,6 +142,21 @@ object TestAlgebra extends App {
   private val func: Fix[NatF] => (Int, Int) = cata(fib)
 
   println(func(Fix(SuccF(Fix(ZeroF)))))
+
+}
+
+
+object TestCoalgebra extends App {
+
+  case class StreamF[E, A](h: E, t: A)
+
+  implicit def streamFFunctor[E]: Functor[StreamF[E, *]] = new Functor[StreamF[E, *]] {
+    override def map[A, B](fa: StreamF[E, A])(f: A => B): StreamF[E, B] =
+      StreamF(fa.h, f(fa.t))
+  }
+
+  case class Stream[E](h: E, t: Stream[E])
+
 
 }
 

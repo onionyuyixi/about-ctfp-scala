@@ -1,6 +1,6 @@
 package onion_scalaz.morphism.functionusage
 
-import onion_scalaz.morphism.Functor
+import onion_scalaz.morphism.functors.Functor
 import scalaz.Equal
 
 
